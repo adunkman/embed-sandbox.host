@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Embedded Tweet</title>
+    <style>
+      body { margin: 0; }
+    </style>
+  </head>
+  <body>
+    <script type="text/html" id="template">
+      <blockquote class="twitter-tweet">
+        <a href="https://twitter.com/_/status/{{ id }}"></a>
+      </blockquote>
+    </script>
+
+    <script>
+      (function () {
+        var id = new URLSearchParams(location.search).get("id")
+        var html = document.getElementById("template").innerText.replace("{{ id }}", id)
+        document.body.innerHTML = html
+
+        window.parent.addEventListener("message", function (evt) {
+          console.log(evt)
+        })
+
+        var height = 0
+        new MutationObserver(function () {
+          var newHeight = document.body.getBoundingClientRect().height
+          if (height !== newHeight) {
+            height = newHeight
+            window.parent.postMessage({ type: "height", value: height }, "*")
+          }
+        }).observe(document.body, {childList: true})
+      })()
+    </script>
+
+    <script src="https://platform.twitter.com/widgets.js"></script>
+  </body>
+</html>
