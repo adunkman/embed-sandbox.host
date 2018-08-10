@@ -19,10 +19,6 @@
         var html = document.getElementById("template").innerText.replace("{{ id }}", id)
         document.body.innerHTML = html
 
-        window.parent.addEventListener("message", function (evt) {
-          console.log(evt)
-        })
-
         var height = 0
         new MutationObserver(function () {
           var newHeight = document.body.getBoundingClientRect().height
